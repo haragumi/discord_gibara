@@ -4,12 +4,14 @@ import random
 import unicodedata
 import os
 
-TOKEN = os.environ["DISCORD_TOKEN"]
+#TOKEN = os.environ["DISCORD_TOKEN"]
+TOKEN = "NzA5NzM5MDA3MTc2NjA1ODI0.XrwQtQ.2x5owlJ2TVHY1tC09R3IFdkM9zs"
 client = discord.Client()
 channel = None
 wb = None
 q = "test"
 a = "test"
+q_array = ["a", "b", "c", "d"]
 
 def zenkaku_translate(string):
     text = "！＂＃＄％＆＇（）＊＋，－．／０１２３４５６７８９：；＜＝＞？＠ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ［＼］＾＿｀>？＠ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ｛｜｝～"
@@ -26,6 +28,9 @@ def xls_open(string):
         q = string + '.xlsx は存在しません'
         return
     sheet = wb.sheet_by_name('Sheet1')
+        
+def typing_qanda():
+    global wb,sheet,q,a
     col_num = sheet.nrows
     while True:
         q_num = random.randint(0,col_num-1)
@@ -37,7 +42,20 @@ def xls_open(string):
     a = zenkaku_translate(a)
     if ".0" in a:
         a = a.replace(".0","")
-    
+        
+def yontaku_qanda():
+    global wb,sheet,q,q_array,a
+    col_num = sheet.nrows / 4
+    while True:
+        q_num = random.randint(0,col_num-1) * 4
+        if '┗' not in sheet.cell_value(q_num,0) and '分岐' not in sheet.cell_value(q_num,0):
+            break
+    q = sheet.cell_value(q_num,0)
+    for i in range(4):
+        q_array[i] = sheet.cell_value(q_num + i, 1)
+        if sheet.cell_value(q_num,2) == q_array[i]:
+            a = str(i+int(1))
+
 def what_chr(string):
     name = unicodedata.name(string[0])
     if "HIRAGANA" in name:
@@ -63,7 +81,20 @@ async def on_message(message):
         xls_open(message.content.replace('&quiz ',""))
         if q != 'ファイルオープンに失敗しました':
             channel = message.channel
-        await message.channel.send(q + "(" + what_chr(a) + ")")
+        if 'tai' in message.content:
+            typing_qanda()
+            await message.channel.send(q + "(" + what_chr(a) + ")")
+        elif 'kyu' in message.content:
+            typing_qanda()
+            await message.channel.send(q)
+        elif 'taku' in message.content:
+            yontaku_qanda()
+            await message.channel.send(q)
+            for i in range(4):
+                await message.channel.send(str(i+int(1)) + ". " + q_array[i])
+        else:
+            channel = message.channel
+            await message.channel.send("例外が発生しました")
     elif wb is not None and message.content.upper() == a:
         await message.channel.send("正解だ！")
         wb = None
