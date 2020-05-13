@@ -1,4 +1,4 @@
 discord.py
 xlrd
-requirements.txt
+random.txt
 UnicodeData.txt
