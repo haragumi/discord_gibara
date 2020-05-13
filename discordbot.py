@@ -3,7 +3,7 @@ import xlrd
 import random
 import unicodedata
 
-TOKEN = DISCORD_TOKEN
+TOKEN = os.environ["DISCORD_TOKEN"]
 client = discord.Client()
 channel = None
 wb = None
