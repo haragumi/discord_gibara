@@ -1,4 +1,4 @@
 discord.py
-xlrd.py
-random.py
-unicodedata.py
+xlrd
+random
+unicodedata
