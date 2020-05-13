@@ -4,8 +4,7 @@ import random
 import unicodedata
 import os
 
-#TOKEN = os.environ["DISCORD_TOKEN"]
-TOKEN = "NzA5NzM5MDA3MTc2NjA1ODI0.XrwQtQ.2x5owlJ2TVHY1tC09R3IFdkM9zs"
+TOKEN = os.environ["DISCORD_TOKEN"]
 client = discord.Client()
 channel = None
 wb = None
