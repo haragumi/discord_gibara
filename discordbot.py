@@ -88,9 +88,10 @@ async def on_message(message):
             await message.channel.send(q)
         elif 'taku' in message.content:
             yontaku_qanda()
-            await message.channel.send(q)
+            choice = q + "\n"
             for i in range(4):
-                await message.channel.send(str(i+int(1)) + ". " + q_array[i])
+                choice += str(i+int(1)) + ". " + q_array[i] + "\n"
+            await message.channel.send(choice)
         else:
             channel = message.channel
             await message.channel.send("例外が発生しました")
