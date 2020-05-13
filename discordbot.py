@@ -2,6 +2,7 @@ import discord
 import xlrd
 import random
 import unicodedata
+import os
 
 TOKEN = os.environ["DISCORD_TOKEN"]
 client = discord.Client()
