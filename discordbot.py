@@ -4,7 +4,7 @@ import random
 import unicodedata
 import os
 import glob
-import datetime
+#import datetime
 
 TOKEN = os.environ["DISCORD_TOKEN"]
 client = discord.Client()
@@ -21,7 +21,9 @@ def zenkaku_translate(string):
     return string
 
 def xls_open(string):
-    global wb,sheet,q,a
+    global wb,sheet,q
+    if wb:
+        wb = None
     try: 
         s = 'quiz/' + string + '.xlsx'
         wb = xlrd.open_workbook(s)
@@ -89,7 +91,9 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    global wb,channel
+    global wb,channel,q,a
+    q = ""
+    a = ""
     if channel is not None and message.channel != channel:
         return
     elif message.author.bot:
@@ -98,8 +102,11 @@ async def on_message(message):
         await message.channel.send(xls_stat())
     elif '&quiz ' in message.content:
         xls_open(message.content.replace('&quiz ',""))
-        if q != 'ファイルオープンに失敗しました':
+        if wb is not None:
             channel = message.channel
+        else:
+            await message.channel.send(q)
+            return
         if 'tai' in message.content:
             typing_qanda()
             await message.channel.send(q + "(" + what_chr(a) + ")")
