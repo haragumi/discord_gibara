@@ -39,9 +39,12 @@ def xls_stat():
         col_num = sheeta.nrows
         if 'taku' in file_path:
             col_num = int(col_num/4) 
-        stat_message += str(col_num) + "問\t"
-        nowtime = str(datetime.datetime.fromtimestamp(os.path.getmtime(file_path)))
-        stat_message += nowtime[:16] + "\n"
+        stat_message += str(col_num) + "問\n"
+        # gitのファイルはタイムスタンプを管理しないらしい
+        # なので更新日時は取得できませんでした
+        # Excelにマクロで埋め込んで取得すると良さそう。あとで気が向いたら…
+        #nowtime = str(datetime.datetime.fromtimestamp(os.path.getmtime(file_path)))
+        #stat_message += nowtime[:16] + "\n"
     return stat_message
         
 def typing_qanda():
