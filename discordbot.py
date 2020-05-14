@@ -3,6 +3,8 @@ import xlrd
 import random
 import unicodedata
 import os
+import glob
+import datetime
 
 TOKEN = os.environ["DISCORD_TOKEN"]
 client = discord.Client()
@@ -27,6 +29,20 @@ def xls_open(string):
         q = string + '.xlsx は存在しません'
         return
     sheet = wb.sheet_by_name('Sheet1')
+    
+def xls_stat():
+    stat_message = ""
+    for file_path in glob.glob('quiz/*.xlsx'):
+        stat_message += os.path.basename(file_path) + "\t"
+        wba = xlrd.open_workbook(file_path)
+        sheeta = wba.sheet_by_name('Sheet1')
+        col_num = sheeta.nrows
+        if 'taku' in file_path:
+            col_num = int(col_num/4) 
+        stat_message += str(col_num) + "問\t"
+        nowtime = str(datetime.datetime.fromtimestamp(os.path.getmtime(file_path)))
+        stat_message += nowtime[:16] + "\n"
+    return stat_message
         
 def typing_qanda():
     global wb,sheet,q,a
@@ -35,7 +51,6 @@ def typing_qanda():
         q_num = random.randint(0,col_num-1)
         if '答えなさい' not in sheet.cell_value(q_num,0):
             break
-        
     q = sheet.cell_value(q_num,0)
     a = str(sheet.cell_value(q_num,1))
     a = zenkaku_translate(a)
@@ -76,6 +91,8 @@ async def on_message(message):
         return
     elif message.author.bot:
         return
+    elif '&stat' in message.content:
+        await message.channel.send(xls_stat())
     elif '&quiz ' in message.content:
         xls_open(message.content.replace('&quiz ',""))
         if q != 'ファイルオープンに失敗しました':
