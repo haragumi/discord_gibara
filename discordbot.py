@@ -50,7 +50,7 @@ def xls_stat():
     return stat_message
         
 def typing_qanda():
-    global wb,sheet,q,a
+    global wb,sheet,q,a,channel
     col_num = sheet.nrows
     while True:
         q_num = random.randint(0,col_num-1)
@@ -64,7 +64,7 @@ def typing_qanda():
     channel = None
         
 def yontaku_qanda():
-    global wb,sheet,q,q_array,a
+    global wb,sheet,q,q_array,a,channel
     col_num = sheet.nrows / 4
     while True:
         q_num = random.randint(0,col_num-1) * 4
