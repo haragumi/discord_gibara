@@ -92,8 +92,6 @@ async def on_ready():
 @client.event
 async def on_message(message):
     global wb,channel,q,a
-    q = ""
-    a = ""
     if channel is not None and message.channel != channel:
         return
     elif message.author.bot:
