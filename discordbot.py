@@ -61,6 +61,7 @@ def typing_qanda():
     a = zenkaku_translate(a)
     if ".0" in a:
         a = a.replace(".0","")
+    channel = None
         
 def yontaku_qanda():
     global wb,sheet,q,q_array,a
@@ -74,6 +75,7 @@ def yontaku_qanda():
         q_array[i] = sheet.cell_value(q_num + i, 1)
         if sheet.cell_value(q_num,2) == q_array[i]:
             a = str(i+int(1))
+    channel = None
 
 def what_chr(string):
     name = unicodedata.name(string[0])
