@@ -50,7 +50,7 @@ def xls_stat():
     return stat_message
         
 def typing_qanda():
-    global wb,sheet,q,a,channel
+    global wb,sheet,q,a
     col_num = sheet.nrows
     while True:
         q_num = random.randint(0,col_num-1)
@@ -61,10 +61,9 @@ def typing_qanda():
     a = zenkaku_translate(a)
     if ".0" in a:
         a = a.replace(".0","")
-    channel = None
         
 def yontaku_qanda():
-    global wb,sheet,q,q_array,a,channel
+    global wb,sheet,q,q_array,a
     col_num = sheet.nrows / 4
     while True:
         q_num = random.randint(0,col_num-1) * 4
@@ -75,7 +74,6 @@ def yontaku_qanda():
         q_array[i] = sheet.cell_value(q_num + i, 1)
         if sheet.cell_value(q_num,2) == q_array[i]:
             a = str(i+int(1))
-    channel = None
 
 def what_chr(string):
     name = unicodedata.name(string[0])
@@ -106,6 +104,7 @@ async def on_message(message):
             channel = message.channel
         else:
             await message.channel.send(q)
+            channel = None
             return
         if 'tai' in message.content:
             typing_qanda()
@@ -125,9 +124,11 @@ async def on_message(message):
     elif wb is not None and message.content.upper() == a:
         await message.channel.send("正解だ！")
         wb = None
+        channel = None
     elif wb is not None and message.content != a:
         await message.channel.send("不正解だ～  答:" + a)
         wb = None
+        channel = None
     elif message.content == "&quit":
         client.close()
     else:
