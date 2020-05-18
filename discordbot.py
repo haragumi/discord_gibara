@@ -92,12 +92,8 @@ async def on_ready():
 @client.event
 async def on_message(message):
     global wb,channel,q,a
-    if channel is not None and message.channel != channel:
+    if message.author.bot:
         return
-    elif message.author.bot:
-        return
-    elif '&stat' in message.content:
-        await message.channel.send(xls_stat())
     elif '&quiz ' in message.content:
         xls_open(message.content.replace('&quiz ',""))
         if wb is not None:
@@ -121,6 +117,10 @@ async def on_message(message):
         else:
             channel = message.channel
             await message.channel.send("例外が発生しました")
+    elif channel is not None and message.channel != channel:
+        return
+    elif '&stat' in message.content:
+        await message.channel.send(xls_stat())
     elif wb is not None and message.content.upper() == a:
         await message.channel.send("正解だ！")
         wb = None
